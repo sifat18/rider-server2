@@ -43,6 +43,13 @@ async function run() {
             console.log('success');
             res.json({ admin: Isadmin });
         });
+        app.get('/rider', async (req, res) => {
+
+            const result = await riderCollection.find({})
+            const riderData = await result.toArray()
+            res.json(riderData)
+        })
+
         app.post('/rider', async (req, res) => {
             const riderInfo = JSON.parse(req.body.registerData);
             const name = riderInfo.name;
@@ -104,6 +111,12 @@ async function run() {
             console.log(result.insertedId);
             res.json(result)
 
+        })
+        app.get('/driver', async (req, res) => {
+
+            const result = await driveCollection.find({})
+            const driverData = await result.toArray()
+            res.json(driverData)
         })
         app.put('/admin/:email', async (req, res) => {
             const user = req.params.email;
