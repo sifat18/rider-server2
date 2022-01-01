@@ -124,8 +124,17 @@ async function run() {
         app.get('/driver', async (req, res) => {
 
             const result = await driveCollection.find({})
-            const driverData = await result.toArray()
-            res.json(driverData)
+            const page = req.query.page;
+            const size = parseInt(req.query.size);
+            let drivers;
+            const count = await result.count();
+            if (page) {
+                drivers = await result.skip(page * size).limit(size).toArray();
+            }
+            else {
+                drivers = await result.toArray();
+            }
+            res.send({ count, drivers })
         })
         app.put('/admin/:email', async (req, res) => {
             const user = req.params.email;
