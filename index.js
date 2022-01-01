@@ -46,8 +46,17 @@ async function run() {
         app.get('/rider', async (req, res) => {
 
             const result = await riderCollection.find({})
-            const riderData = await result.toArray()
-            res.json(riderData)
+            const page = req.query.page;
+            const size = parseInt(req.query.size);
+            let riders;
+            const count = await result.count();
+            if (page) {
+                riders = await result.skip(page * size).limit(size).toArray();
+            }
+            else {
+                riders = await result.toArray();
+            }
+            res.send({ count, riders })
         })
 
         app.post('/rider', async (req, res) => {
